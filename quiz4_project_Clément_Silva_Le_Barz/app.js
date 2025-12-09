@@ -9,9 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --------------------------------------------
-// 🔌 CONNEXION MYSQL
-// --------------------------------------------
+
 const db = mysql.createPool({
     host: "localhost",
     user: "chatapp",
@@ -19,7 +17,7 @@ const db = mysql.createPool({
     database: "projetchat"
 });
 
-// Vérification connexion
+
 db.getConnection((err) => {
     if (err) {
         console.log("Connection error MySQL :", err);
@@ -28,9 +26,7 @@ db.getConnection((err) => {
     }
 });
 
-// --------------------------------------------
-// 🔐 MIDDLEWARE AUTH JWT
-// --------------------------------------------
+
 function auth(req, res, next) {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Missing token" });
@@ -42,9 +38,6 @@ function auth(req, res, next) {
     });
 }
 
-// --------------------------------------------
-// 👤 INSCRIPTION
-// --------------------------------------------
 app.post("/auth/register", (req, res) => {
     const { username, password } = req.body;
 
@@ -62,9 +55,7 @@ app.post("/auth/register", (req, res) => {
     });
 });
 
-// --------------------------------------------
-// 🔑 CONNEXION
-// --------------------------------------------
+
 app.post("/auth/login", (req, res) => {
     const { username, password } = req.body;
 
@@ -93,9 +84,6 @@ app.post("/auth/login", (req, res) => {
     );
 });
 
-// --------------------------------------------
-// 📨 ENVOYER MESSAGE (protégé)
-// --------------------------------------------
 app.post("/messages", auth, (req, res) => {
     const { content } = req.body;
     const user_id = req.user.id;
@@ -110,9 +98,6 @@ app.post("/messages", auth, (req, res) => {
     );
 });
 
-// --------------------------------------------
-// 📥 RÉCUPÉRER MESSAGES (protégé)
-// --------------------------------------------
 app.get("/messages", auth, (req, res) => {
     db.query(
         `SELECT messages.*, users.username 
@@ -126,9 +111,6 @@ app.get("/messages", auth, (req, res) => {
     );
 });
 
-// --------------------------------------------
-// 🚀 LANCER SERVEUR
-// --------------------------------------------
 app.listen(3002, () => {
     console.log("Serveur lancé sur http://localhost:3002");
 });
