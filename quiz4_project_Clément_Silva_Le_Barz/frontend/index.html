@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat App Modern</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <h1>Chat App</h1>
+</header>
+
+<main>
+
+    <!-- REGISTER -->
+    <section id="register-section" class="card">
+        <h2>Create an account</h2>
+        <input type="text" id="reg-username" placeholder="User name">
+        <input type="password" id="reg-password" placeholder="Password">
+        <button onclick="register()" class="btn">Create an account</button>
+        <p id="register-result"></p>
+    </section>
+
+    <!-- LOGIN -->
+    <section id="login-section" class="card">
+        <h2>Connection</h2>
+        <input type="text" id="log-username" placeholder="User name">
+        <input type="password" id="log-password" placeholder="Password">
+        <button onclick="login()" class="btn">Log in</button>
+        <p id="login-result"></p>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chat-section" class="card" style="display:none;">
+        <h2>Messages</h2>
+
+        <div id="messages" class="messages-box"></div>
+
+        <textarea id="message-input" placeholder="Type youR message..."></textarea>
+        <button onclick="sendMessage()" class="btn">Send</button>
+        <button onclick="logout()" class="btn logout">Disconnect</button>
+    </section>
+
+</main>
+
+<footer>
+    <img src="img/Clément.jpg" alt="Creator" class="creator-img">
+    <p>Created by <b>Clément</b> © 2025</p>
+</footer>
+
+
+<script>
+const API_URL = "http://localhost:3002";
+
+// ------------------------------------------------------
+// REGISTER
+// ------------------------------------------------------
+async function register() {
+    const username = document.getElementById("reg-username").value;
+    const password = document.getElementById("reg-password").value;
+
+    const res = await fetch(API_URL + "/auth/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username, password})
+    });
+
+    const data = await res.json();
+    document.getElementById("register-result").innerText = data.message;
+}
+
+// ------------------------------------------------------
+// LOGIN
+// ------------------------------------------------------
+async function login() {
+    const username = document.getElementById("log-username").value;
+    const password = document.getElementById("log-password").value;
+
+    const res = await fetch(API_URL + "/auth/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username, password})
+    });
+
+    const data = await res.json();
+
+    if (data.token) {
+        localStorage.setItem("token", data.token);
+
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("register-section").style.display = "none";
+        document.getElementById("chat-section").style.display = "block";
+
+        loadMessages();
+    } else {
+        document.getElementById("login-result").innerText = data.message;
+    }
+}
+
+// ------------------------------------------------------
+// CHARGER MESSAGES
+// ------------------------------------------------------
+async function loadMessages() {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API_URL + "/messages", {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    const data = await res.json();
+
+    const messagesDiv = document.getElementById("messages");
+    messagesDiv.innerHTML = "";
+
+    data.forEach(msg => {
+        const date = new Date(msg.created_at).toLocaleString();
+
+        messagesDiv.innerHTML += `
+            <div class="msg">
+                <div class="msg-header">
+                    <span class="msg-user">${msg.username}</span>
+                    <span class="msg-date">${date}</span>
+                </div>
+                <div class="msg-content">${msg.content}</div>
+            </div>
+        `;
+    });
+}
+
+// ------------------------------------------------------
+// ENVOYER MESSAGE
+// ------------------------------------------------------
+async function sendMessage() {
+    const token = localStorage.getItem("token");
+    const content = document.getElementById("message-input").value;
+
+    await fetch(API_URL + "/messages", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({content})
+    });
+
+    document.getElementById("message-input").value = "";
+    loadMessages();
+}
+
+// ------------------------------------------------------
+// LOGOUT
+// ------------------------------------------------------
+function logout() {
+    localStorage.removeItem("token");
+    window.location.reload();
+}
+
+</script>
+</body>
+</html>

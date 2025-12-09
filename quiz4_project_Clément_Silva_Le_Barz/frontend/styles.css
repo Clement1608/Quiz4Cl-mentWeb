@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f2f6;
+    margin: 0;
+    padding: 0;
+}
+
+/* HEADER */
+header {
+    background: #0984e3;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+/* MAIN */
+main {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* INPUTS */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 8px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+textarea {
+    height: 80px;
+}
+
+/* BUTTONS */
+.btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #0984e3;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.btn:hover {
+    background: #74b9ff;
+    transform: scale(1.02);
+}
+
+.logout {
+    background: #d63031;
+}
+
+.logout:hover {
+    background: #ff7675;
+}
+
+/* MESSAGES */
+.messages-box {
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 10px;
+    height: 350px;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.msg {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.msg-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.msg-content {
+    font-size: 15px;
+}
+
+/* FOOTER */
+footer {
+    background: #2d3436;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.creator-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
